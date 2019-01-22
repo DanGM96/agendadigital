@@ -12,8 +12,6 @@ public class TipoServicoDAOImpl implements TipoServicoDAO {
 
 	private int indice = 0;
 
-	// Esta classe realiza a regra de negocio e acoes dos metodos
-
 	/**
 	 * (non-Javadoc)
 	 * 
