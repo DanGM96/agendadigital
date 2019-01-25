@@ -1,5 +1,7 @@
 package br.com.iftm.controller;
 
+import java.util.List;
+
 import javax.websocket.server.PathParam;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,26 +16,27 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.iftm.business.BusinessException;
-import br.com.iftm.business.TipoServicoBusiness;
-import br.com.iftm.entity.TipoServico;
+import br.com.iftm.business.CidadeBusiness;
+import br.com.iftm.entity.Cidade;
+import br.com.iftm.enums.Estado;
 
 @RestController // Habilita Classe como um serviço rest.
-@RequestMapping(value = "/tiposervico") // Nome do servico.
+@RequestMapping(value = "/cidade") // Nome da cidade.
 
-public class TipoServicoRest {
+public class CidadeRest {
 
 	@Autowired
-	private TipoServicoBusiness business;
+	private CidadeBusiness business;
 
 	// create
 	@PostMapping()
-	public ResponseEntity<?> create(@RequestBody TipoServico tipoServico) {
+	public ResponseEntity<?> create(@RequestBody Cidade cidade) {
 
 		try {
 
-			tipoServico = business.create(tipoServico);
+			cidade = business.create(cidade);
 
-			return ResponseEntity.ok(tipoServico);
+			return ResponseEntity.ok(cidade);
 
 		} catch (BusinessException e) {
 			e.printStackTrace();
@@ -44,7 +47,6 @@ public class TipoServicoRest {
 
 			return ResponseEntity.badRequest().body(e);
 		}
-
 	}
 
 	// read
@@ -69,13 +71,21 @@ public class TipoServicoRest {
 
 	}
 
-	// read name
-	@GetMapping("/filtro/nome")
-	public ResponseEntity<?> readByName(@PathParam("nome") String nome) {
+	// read estado
+	@GetMapping("/filtro/estado")
+	public ResponseEntity<?> readByEstado(@PathParam("estado") Estado estado) {
 
 		try {
 
-			return ResponseEntity.ok(business.readByName(nome));
+			List<Cidade> readByEstado = business.readByEstado(estado);
+
+			if (readByEstado == null || readByEstado.isEmpty()) {
+
+				return ResponseEntity.notFound().build();
+
+			}
+
+			return ResponseEntity.ok(readByEstado);
 
 		} catch (BusinessException e) {
 
@@ -89,17 +99,18 @@ public class TipoServicoRest {
 
 			return ResponseEntity.badRequest().body(e);
 		}
+
 	}
 
 	// update
 	@PutMapping
-	public ResponseEntity<?> update(@RequestBody TipoServico tipoServico) {
+	public ResponseEntity<?> update(@RequestBody Cidade cidade) {
 
 		try {
 
-			tipoServico = business.update(tipoServico);
+			cidade = business.update(cidade);
 
-			return ResponseEntity.ok(tipoServico);
+			return ResponseEntity.ok(cidade);
 
 		} catch (BusinessException e) {
 
@@ -113,6 +124,7 @@ public class TipoServicoRest {
 
 			return ResponseEntity.badRequest().body(e);
 		}
+
 	}
 
 	// delete
@@ -120,7 +132,6 @@ public class TipoServicoRest {
 	public ResponseEntity<?> delete(@PathVariable("id") Integer id) {
 
 		try {
-
 			business.delete(id);
 
 			return ResponseEntity.ok().build();

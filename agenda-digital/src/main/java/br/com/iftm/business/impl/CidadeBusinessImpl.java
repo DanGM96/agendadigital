@@ -9,62 +9,75 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import br.com.iftm.business.BusinessException;
-import br.com.iftm.business.TipoServicoBusiness;
-import br.com.iftm.dao.TipoServicoDAO;
-import br.com.iftm.entity.TipoServico;
+import br.com.iftm.business.CidadeBusiness;
+import br.com.iftm.dao.CidadeDAO;
+import br.com.iftm.entity.Cidade;
+import br.com.iftm.enums.Estado;
 
 @Service
 @Transactional
-public class TipoServicoBusinessImpl implements TipoServicoBusiness {
+public class CidadeBusinessImpl implements CidadeBusiness {
 
 	@Autowired
-	private TipoServicoDAO dao;
+	private CidadeDAO dao;
 
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED)
-	public TipoServico create(TipoServico tipoServico) throws BusinessException {
+	public Cidade create(Cidade cidade) throws BusinessException {
 
-		if (StringUtils.isEmpty(tipoServico.getNome())) {
+		if (StringUtils.isEmpty(cidade.getNome())) {
 
 			throw new BusinessException("Nome Requerido!");
 		}
 
-		return dao.create(tipoServico);
+		if (cidade.getEstado() == null) {
+
+			throw new BusinessException("Estado Requerido!");
+		}
+
+		return dao.create(cidade);
 	}
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<TipoServico> read() throws BusinessException {
+	public List<Cidade> read() throws BusinessException {
 
 		return dao.read();
 	}
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<TipoServico> readByName(String nome) throws BusinessException {
+	public List<Cidade> readByEstado(Estado estado) throws BusinessException {
 
-		if (StringUtils.isEmpty(nome)) {
-			throw new BusinessException("Nome Requerido!");
+		if (estado == null) {
+
+			throw new BusinessException("Estado Requerido!");
+
 		}
 
-		return dao.readByName(nome);
+		return dao.readByEstado(estado);
 	}
 
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED)
-	public TipoServico update(TipoServico tipoServico) throws BusinessException {
+	public Cidade update(Cidade cidade) throws BusinessException {
 
-		if (tipoServico.getCodigo() == null) {
+		if (cidade.getCodigo() == null) {
 
 			throw new BusinessException("Codigo Requerido!");
 		}
 
-		if (StringUtils.isEmpty(tipoServico.getNome())) {
+		if (StringUtils.isEmpty(cidade.getNome())) {
 
 			throw new BusinessException("Nome Requerido!");
 		}
 
-		return dao.update(tipoServico);
+		if (cidade.getEstado() == null) {
+
+			throw new BusinessException("Estado Requerido!");
+		}
+
+		return dao.update(cidade);
 	}
 
 	@Override

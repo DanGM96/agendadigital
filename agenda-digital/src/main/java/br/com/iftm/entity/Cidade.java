@@ -1,0 +1,62 @@
+package br.com.iftm.entity;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
+
+import br.com.iftm.enums.Estado;
+
+@Entity
+@Table(name = "TB_CIDADE", schema = "EVERIS", uniqueConstraints = {
+		@UniqueConstraint(name = "UNQ_CIDADE", columnNames = { "NOM_CIDADE", "SIG_ESTADO" }) })
+@SequenceGenerator(name = "SQ_CIDADE", sequenceName = "SQ_CIDADE", initialValue = 1, allocationSize = 1, schema = "EVERIS")
+public class Cidade {
+
+	@Id
+	@Column(name = "COD_CIDADE")
+	@GeneratedValue(generator = "SQ_CIDADE", strategy = GenerationType.SEQUENCE)
+	private Integer codigo;
+
+	@Column(name = "NOM_CIDADE", nullable = false, length = 100)
+	private String nome;
+
+	@Column(name = "SIG_ESTADO", nullable = false, length = 2)
+	@Enumerated(EnumType.STRING)
+	private Estado estado;
+
+	// @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy =
+	// "cidade", orphanRemoval = true, targetEntity = PrestadorServico.class)
+	// private PrestadorServico prestadorServico;
+
+	public Integer getCodigo() {
+		return codigo;
+	}
+
+	public void setCodigo(Integer codigo) {
+		this.codigo = codigo;
+	}
+
+	public String getNome() {
+		return nome;
+	}
+
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+
+	public Estado getEstado() {
+		return estado;
+	}
+
+	public void setEstado(Estado estado) {
+		this.estado = estado;
+	}
+
+}
